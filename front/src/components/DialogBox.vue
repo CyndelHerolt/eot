@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 
 const props = defineProps({
   messages: {
@@ -7,13 +7,15 @@ const props = defineProps({
     required: true
   }
 })
+
+const emits = defineEmits(['close'])
 </script>
 
 <template>
   <div class="container w-1/2 border border-gray-700 rounded-lg">
     <div class="flex items-center p-3 gap-4 rounded-t-md bg-black">
       <div class="flex items-center">
-        <button class="flex justify-center items-center p-0 mr-2 h-3 w-3 rounded-full bg-red-600"></button>
+        <button @click="$emit('close')" class="flex justify-center items-center p-0 mr-2 h-3 w-3 rounded-full bg-red-600"></button>
         <button class="flex justify-center items-center p-0 mr-2 h-3 w-3 rounded-full bg-gray-600"></button>
         <button class="flex justify-center items-center p-0 mr-2 h-3 w-3 rounded-full bg-gray-600"></button>
       </div>

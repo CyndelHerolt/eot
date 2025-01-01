@@ -15,6 +15,7 @@ import Column from "primevue/column"
 import ColumnGroup from "primevue/columngroup"
 import Dialog from "primevue/dialog"
 import {SelectButton} from "primevue";
+import {Dock} from "primevue";
 
 const components = [
     Button,
@@ -24,6 +25,7 @@ const components = [
     ColumnGroup,
     Dialog,
     SelectButton,
+    Dock
 ]
 
 const pinia = createPinia();
