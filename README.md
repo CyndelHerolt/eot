@@ -18,6 +18,7 @@
     - Le joueur reçoit des demandes externes (gouvernements, entreprises, groupes idéologiques) pour “ajuster” ou censurer certaines archives.
     - Exemples : supprimer des documents controversés, modifier des faits historiques pour aligner l’histoire sur une idéologie.
     - Le joueur peut influencer l’IA en programmant des priorités ou en donnant des ordres spécifiques.
+    - Une intégration de ChatGPT via l'API comme assistant pour donner des conseils ou des avis.
 
 - Autonomie de l’IA :
     - Si le joueur laisse l’IA sans consignes, elle commence à prendre des décisions basées sur des algorithmes d’efficacité ou d’éthique propres.
