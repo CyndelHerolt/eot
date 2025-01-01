@@ -1,6 +1,7 @@
 import './assets/main.css'
 
 import { createApp } from 'vue'
+import { createPinia } from "pinia";
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 import 'primeicons/primeicons.css'
@@ -25,6 +26,7 @@ const components = [
     SelectButton,
 ]
 
+const pinia = createPinia();
 const app = createApp(App)
 
 components.forEach(component => {
@@ -42,4 +44,5 @@ app.use(PrimeVue, {
 
 app.use(router)
 
+app.use(pinia);
 app.mount('#app')
