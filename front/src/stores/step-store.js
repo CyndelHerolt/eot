@@ -10,7 +10,7 @@ export const useStepStore = defineStore('step', {
     nextStep() {
       const messagesStore = useMessagesStore()
       if (this.currentStep === 0) {
-        messagesStore.addMessage("Bienvenue, archiviste. Vous venez de rejoindre la prestigieuse Bibliothèque des Échos, le sanctuaire de la mémoire collective. Ici repose l’histoire de l’humanité, fragment par fragment, attendant votre expertise. Soyez vigilant, notre Histoire repose sur votre impartialité.")
+        messagesStore.addMessage("Bienvenue, archiviste. Vous venez de rejoindre la prestigieuse Bibliothèque numérique des Échos, le sanctuaire de la mémoire collective. Ici repose l’histoire de l’humanité, fragment par fragment, attendant votre expertise. Soyez vigilant, notre Histoire repose sur votre impartialité.")
       }
       this.currentStep++
       localStorage.setItem('currentStep', JSON.stringify(this.currentStep))
