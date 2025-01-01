@@ -43,7 +43,7 @@ watch(isDarkMode, (newValue) => {
 </script>
 
 <template>
-  <header class="fixed top-0 left-0 w-full z-10 backdrop-blur-md">
+  <header class="w-full z-10 backdrop-blur-md">
     <div class="w-full flex justify-between items-center py-2 px-4">
       <nav class="flex gap-2">
         <RouterLink to="/">Home</RouterLink>
@@ -57,11 +57,14 @@ watch(isDarkMode, (newValue) => {
     </div>
   </header>
 
-  <main class="h-full my-36">
+  <main class="py-8 px-12">
     <RouterView />
   </main>
 </template>
 
 <style scoped>
-/* Add specific styles for dark mode if necessary */
+main {
+  max-height: calc(100vh - 150px);
+  overflow-y: scroll;
+}
 </style>
