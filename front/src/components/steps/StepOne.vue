@@ -12,6 +12,42 @@ const docsStore = useDocsStore()
 const boxStore = useBoxStore()
 const valueChercheurs = ref(0);
 const valuePeuple = ref(0);
+const proprieteVisible = ref(false);
+const newPropertyName = ref('');
+const newPropertyType = ref('text');
+const newPropertyDefaultValue = ref('');
+const propertyTypes = ['int', 'text', 'array'];
+const validationError = ref('');
+
+function validateProperty() {
+  if (!newPropertyName.value) {
+    validationError.value = 'Property name is required.';
+    return false;
+  }
+  if (newPropertyType.value === 'int' && isNaN(newPropertyDefaultValue.value)) {
+    validationError.value = 'Default value must be a number for type int.';
+    return false;
+  }
+  if (newPropertyType.value === 'array' && !Array.isArray(newPropertyDefaultValue.value)) {
+    validationError.value = 'Default value must be an array for type array.';
+    return false;
+  }
+  validationError.value = '';
+  return true;
+}
+
+function addPropertyToBox() {
+  if (validateProperty()) {
+    boxStore.addPropertyToAllBoxes(newPropertyName.value, newPropertyType.value, newPropertyDefaultValue.value);
+    newPropertyName.value = '';
+    newPropertyType.value = 'text';
+    newPropertyDefaultValue.value = '';
+  }
+}
+
+function removePropertyFromBox(propertyName) {
+  boxStore.removePropertyFromAllBoxes(propertyName);
+}
 
 function handleClose() {
   messagesStore.hideDialogBox()
@@ -41,6 +77,17 @@ onMounted(() => {
 
 const boxes = computed(() => boxStore.boxes)
 const documents = computed(() => docsStore.documents)
+const existingProperties = computed(() => {
+  const properties = new Set();
+  boxStore.boxes.forEach(box => {
+    Object.keys(box).forEach(key => {
+      if (key !== 'id' && key !== 'name' && key !== 'documentIds') {
+        properties.add(key);
+      }
+    });
+  });
+  return Array.from(properties);
+});
 </script>
 
 <template>
@@ -49,31 +96,69 @@ const documents = computed(() => docsStore.documents)
     <div v-else class="w-full flex flex-col justify-between gap-10">
       <div class="h-1/4 flex gap-12">
         <div class="w-2/3 h-full flex flex-col gap-2">
-          <Button class="w-fit" icon="pi pi-folder-open" label="Créer une boite" severity="contrast" size="small" @click="createBox"></Button>
-          <div class="overflow-y-scroll flex flex-col gap-2">
-          <div v-for="box in boxes" :key="box.id" class="border border-surface-500 p-2">
-            <InputText v-model="box.name" type="text" size="small" />
-            <div>{{box.documentIds.length}} documents</div>
-            <div class="flex justify-between">
-              <Button class="w-fit" icon="pi pi-plus-circle" label="Ajouter des propriétés" severity="contrast" size="small" @click=""></Button>
-              <Button class="w-fit" icon="pi pi-minus-circle" label="Supprimer la boite" severity="danger" size="small" @click="deleteBox(box)"></Button>
-            </div>
+          <div class="flex justify-between">
+            <Button class="w-fit" icon="pi pi-folder-open" label="Créer une boite" severity="contrast" size="small" @click="createBox"></Button>
+            <Button v-if="boxes.length > 0" class="w-fit" icon="pi pi-plus-circle" label="Ajouter des propriétés aux boîtes" severity="contrast" size="small" @click="proprieteVisible = true"></Button>
+
+            <Dialog v-model:visible="proprieteVisible" modal header="Améliorer vos boîtes" :style="{ width: '25rem' }">
+              <span class="text-surface-500 dark:text-surface-400 block mb-8">Ajouter des propriétés</span>
+              <div class="flex flex-col gap-4">
+                <InputText v-model="newPropertyName" placeholder="Nom de la propriété" />
+                <SelectButton v-model="newPropertyType" :options="propertyTypes" />
+                <InputText v-model="newPropertyDefaultValue" placeholder="Valeur par défaut" />
+                <Button label="Ajouter" @click="addPropertyToBox" />
+                <span v-if="validationError" class="text-red-500">{{ validationError }}</span>
+              </div>
+              <div class="mt-4">
+                <span class="text-surface-500 dark:text-surface-400 block mb-8">Propriétés existantes</span>
+                <div v-for="property in existingProperties" :key="property" class="flex justify-between items-center">
+                  <span>{{ property }}</span>
+                  <Button icon="pi pi-trash" class="p-button-danger p-button-text" @click="removePropertyFromBox(property)" />
+                </div>
+              </div>
+            </Dialog>
           </div>
+
+          <div class="overflow-y-scroll flex flex-col gap-2">
+            <div v-for="box in boxes" :key="box.id" class="border border-surface-500 p-2 flex flex-col gap-2">
+              <div class="flex justify-between">
+                <div class="flex flex-col gap-1">
+                  <div v-for="(value, key) in box" :key="key" class="text-xs">
+                    <div v-if="key !== 'id' && key !== 'documentIds'">
+                      <label>{{ key }}:</label>
+                      <template v-if="typeof value === 'number'">
+                        <InputNumber v-model="box[key]" type="number" size="small" />
+                      </template>
+                      <template v-else-if="Array.isArray(value)">
+                        <InputText v-model="box[key]" type="array" size="small" />
+                      </template>
+                      <template v-else>
+                        <InputText v-model="box[key]" type="text" size="small" />
+                      </template>
+                    </div>
+                  </div>
+                </div>
+                <div>{{box.documentIds.length}} documents</div>
+              </div>
+              <div class="flex justify-between">
+                <Button class="w-fit" icon="pi pi-minus-circle" label="Supprimer la boite" severity="contrast" size="small" @click="deleteBox(box)"></Button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="w-1/3 flex flex-col gap-2 bg-surface-500 bg-opacity-5 p-4">
-        <div>
-          <div>Satisfaction de la communauté des chercheurs</div>
-          <ProgressBar :value="valueChercheurs"></ProgressBar>
+          <div>
+            <div>Satisfaction de la communauté des chercheurs</div>
+            <ProgressBar :value="valueChercheurs"></ProgressBar>
+          </div>
+          <div>
+            <div>Satisfaction du peuple</div>
+            <ProgressBar :value="valuePeuple"></ProgressBar>
+          </div>
         </div>
-        <div>
-          <div>Satisfaction du peuple</div>
-          <ProgressBar :value="valuePeuple"></ProgressBar>
-        </div>
-      </div>
       </div>
       <hr>
-      <div class="h-3/4 w-full px-4 overflow-y-scroll">
+      <div class="h-3/4 w-full px-4 py-10 overflow-y-scroll">
         <div class="text-md">
           {{documents.length}} documents à trier
         </div>

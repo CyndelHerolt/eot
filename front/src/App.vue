@@ -49,7 +49,7 @@ watch(isDarkMode, (newValue) => {
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
-      <h1 class="text-xl">Echoes Of Truth</h1>
+      <h1 class="text-xl">Echoes of Truth</h1>
       <SelectButton v-model="isDarkMode" :options="modeOptions" optionLabel="label" optionValue="value" />
     </div>
     <div class="w-full text-xs">

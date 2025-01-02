@@ -17,7 +17,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="container w-1/2 border border-gray-700 rounded-lg">
+  <div class="container w-1/2 h-fit border border-gray-700 rounded-lg">
     <div class="flex items-center p-3 gap-4 rounded-t-md bg-black">
       <div class="flex items-center">
         <button @click="handleIsReadMessage" class="flex justify-center items-center p-0 mr-2 h-3 w-3 rounded-full bg-red-600"></button>
