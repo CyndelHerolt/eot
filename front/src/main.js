@@ -10,6 +10,7 @@ import router from './router'
 
 import Button from "primevue/button"
 import InputText from "primevue/inputtext"
+import {InputNumber} from "primevue";
 import DataTable from "primevue/datatable"
 import Column from "primevue/column"
 import ColumnGroup from "primevue/columngroup"
@@ -22,6 +23,7 @@ import {ProgressBar} from "primevue";
 const components = [
     Button,
     InputText,
+    InputNumber,
     DataTable,
     Column,
     ColumnGroup,
