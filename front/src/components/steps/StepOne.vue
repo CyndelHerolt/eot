@@ -44,12 +44,13 @@ const documents = computed(() => docsStore.documents)
 </script>
 
 <template>
-  <div class="w-full flex justify-center">
+  <div class="w-full flex justify-center absolute top-0 left-0 h-full px-8">
     <DialogBox v-if="messagesStore.isVisible && !messagesStore.isRead" :messages="messagesStore.messages" @close="handleClose" />
-    <div v-else class="w-full flex flex-col justify-between">
-      <div class="flex h-1/3 gap-12">
-        <div class="w-2/3 flex flex-col gap-2">
+    <div v-else class="w-full flex flex-col justify-between gap-10">
+      <div class="h-1/4 flex gap-12">
+        <div class="w-2/3 h-full flex flex-col gap-2">
           <Button class="w-fit" icon="pi pi-folder-open" label="Créer une boite" severity="contrast" size="small" @click="createBox"></Button>
+          <div class="overflow-y-scroll flex flex-col gap-2">
           <div v-for="box in boxes" :key="box.id" class="border border-surface-500 p-2">
             <InputText v-model="box.name" type="text" size="small" />
             <div>{{box.documentIds.length}} documents</div>
@@ -58,8 +59,9 @@ const documents = computed(() => docsStore.documents)
               <Button class="w-fit" icon="pi pi-minus-circle" label="Supprimer la boite" severity="danger" size="small" @click="deleteBox(box)"></Button>
             </div>
           </div>
+          </div>
         </div>
-        <div class="w-1/3 flex flex-col gap-2">
+        <div class="w-1/3 flex flex-col gap-2 bg-surface-500 bg-opacity-5 p-4">
         <div>
           <div>Satisfaction de la communauté des chercheurs</div>
           <ProgressBar :value="valueChercheurs"></ProgressBar>
@@ -70,7 +72,8 @@ const documents = computed(() => docsStore.documents)
         </div>
       </div>
       </div>
-      <div class="w-full h-2/3 px-4">
+      <hr>
+      <div class="h-3/4 w-full px-4 overflow-y-scroll">
         <div class="text-md">
           {{documents.length}} documents à trier
         </div>
@@ -93,8 +96,4 @@ const documents = computed(() => docsStore.documents)
 </template>
 
 <style scoped>
-  .table {
-    max-height: 60vh;
-    overflow-y: scroll;
-  }
 </style>

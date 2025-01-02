@@ -57,14 +57,14 @@ watch(isDarkMode, (newValue) => {
     </div>
   </header>
 
-  <main class="py-8 px-12">
+  <main class="px-12 w-screen absolute left-0">
     <RouterView />
   </main>
 </template>
 
 <style scoped>
 main {
-  max-height: calc(100vh - 150px);
-  overflow-y: scroll;
+  height: calc(100vh - 8rem);
+  top: 8rem;
 }
 </style>

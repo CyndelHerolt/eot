@@ -21,11 +21,4 @@ function handleNextStep() {
 </template>
 
 <style scoped>
-.p-dock-item-link:hover {
-  cursor: pointer;
-}
-
-.p-dock {
-  position: fixed;
-}
 </style>
