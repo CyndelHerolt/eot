@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useDocsStore } from '@/stores/docs-store.js';
 
 export const useBoxStore = defineStore('box', {
     state: () => ({
@@ -12,6 +13,8 @@ export const useBoxStore = defineStore('box', {
             localStorage.setItem('boxes', JSON.stringify(this.boxes));
         },
         removeBox(box) {
+            const docsStore = useDocsStore();
+            docsStore.addDocuments(box.documentIds);
             this.boxes = this.boxes.filter(b => b.id !== box.id);
             localStorage.setItem('boxes', JSON.stringify(this.boxes));
         },
@@ -42,6 +45,25 @@ export const useBoxStore = defineStore('box', {
             delete this.defaultProperties[propertyName];
             localStorage.setItem('boxes', JSON.stringify(this.boxes));
             localStorage.setItem('defaultProperties', JSON.stringify(this.defaultProperties));
+        },
+        addDocumentsToBox(box, documentIds) {
+            const index = this.boxes.findIndex(b => b.id === box.id);
+            if (index !== -1) {
+                this.boxes[index].documentIds.push(...documentIds);
+                localStorage.setItem('boxes', JSON.stringify(this.boxes));
+            }
+        },
+        emptyBox(box) {
+            const docsStore = useDocsStore();
+            const documentsToReturn = box.documentIds.map(id => {
+                return docsStore.documents.find(doc => doc.id === id);
+            });
+            docsStore.addDocuments(documentsToReturn);
+            const index = this.boxes.findIndex(b => b.id === box.id);
+            if (index !== -1) {
+                this.boxes[index].documentIds = [];
+                localStorage.setItem('boxes', JSON.stringify(this.boxes));
+            }
         }
     }
 });

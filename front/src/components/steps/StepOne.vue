@@ -18,6 +18,7 @@ const newPropertyType = ref('text');
 const newPropertyDefaultValue = ref('');
 const propertyTypes = ['int', 'text', 'array'];
 const validationError = ref('');
+const selectedDocs = ref([]);
 
 function validateProperty() {
   if (!newPropertyName.value) {
@@ -47,6 +48,20 @@ function addPropertyToBox() {
 
 function removePropertyFromBox(propertyName) {
   boxStore.removePropertyFromAllBoxes(propertyName);
+}
+
+function addDocsToBox(box) {
+  if (selectedDocs.value.length > 0) {
+    const validDocs = selectedDocs.value.filter(doc => doc && doc.id);
+    const docIds = validDocs.map(doc => doc.id);
+    boxStore.addDocumentsToBox(box, docIds);
+    docsStore.removeDocuments(docIds);
+    selectedDocs.value = [];
+  }
+}
+
+function emptyBox(box) {
+  boxStore.emptyBox(box);
 }
 
 function handleClose() {
@@ -130,6 +145,8 @@ watch(boxes, (newBoxes) => {
             <div v-for="box in boxes" :key="box.id" class="border border-surface-500 p-2 flex flex-col gap-2">
               <div class="flex justify-between">
                 <div class="flex flex-col gap-1">
+                  <div>{{box.documentIds.length}} documents</div>
+
                   <div v-for="(value, key) in box" :key="key" class="text-xs">
                     <div v-if="key !== 'id' && key !== 'documentIds'">
                       <label>{{ key }}:</label>
@@ -146,8 +163,13 @@ watch(boxes, (newBoxes) => {
                   </div>
                 </div>
                 <div>
-                  <div>{{box.documentIds.length}} documents</div>
-                  <Button class="w-fit" icon="pi pi-minus-circle" label="Supprimer la boite" severity="contrast" size="small" @click="deleteBox(box)"></Button>
+                  <div class="flex flex-col items-end gap-2">
+                    <Button class="w-fit" icon="pi pi-plus-circle" label="Ajouter les documents sélectionnés" severity="contrast" size="small" @click="addDocsToBox(box)"></Button>
+                    <div class="flex gap-1">
+                      <Button class="w-fit" icon="pi pi-trash" label="Vider la boite" severity="contrast" size="small" @click="emptyBox(box)"></Button>
+                      <Button class="w-fit" icon="pi pi-minus-circle" label="Supprimer la boite" severity="danger" size="small" @click="deleteBox(box)"></Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -170,7 +192,7 @@ watch(boxes, (newBoxes) => {
           {{documents.length}} documents à trier
         </div>
         <div class="table">
-          <DataTable :value="documents" showGridlines paginator :rows="10" :rows-per-page-options="[10,20,50,100]">
+          <DataTable :value="documents" showGridlines paginator :rows="10" :rows-per-page-options="[10,20,50,100]" selectionMode="multiple" v-model:selection="selectedDocs">
             <Column field="id" header="Id" sortable></Column>
             <Column field="category" header="Categorie" sortable></Column>
             <Column field="theme" header="Thème" sortable></Column>
