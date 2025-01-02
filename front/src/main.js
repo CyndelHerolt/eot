@@ -17,6 +17,7 @@ import Dialog from "primevue/dialog"
 import {SelectButton} from "primevue";
 import {Dock} from "primevue";
 import {Menubar} from "primevue";
+import {ProgressBar} from "primevue";
 
 const components = [
     Button,
@@ -28,6 +29,7 @@ const components = [
     SelectButton,
     Dock,
     Menubar,
+    ProgressBar
 ]
 
 const pinia = createPinia();
